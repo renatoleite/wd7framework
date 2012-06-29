@@ -1,5 +1,4 @@
-<?
-	
+<?	
 	require('./inc/class/base.class.php');
 	require('./inc/class/util.class.php');
 	
@@ -13,6 +12,5 @@
 	while($result = mysql_fetch_array($rs)){                                                 		
 		echo $result['link']."<br>";
 		
-	}
-	
+	}	
 ?>
