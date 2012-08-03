@@ -1,6 +1,15 @@
 <?
 
-abstract class DBWD7 {
+interface DB{
+	function conectar();
+	function desconecta();
+	function setDB();
+	function statusconexao();
+	function set($prop,$value);
+	function erro($erro);
+}
+
+abstract class DBWD7 implements DB{
 
 	private $host;
 	private $user;
