@@ -10,7 +10,6 @@ interface DB{
 }
 
 abstract class DBWD7 implements DB{
-
 	private $host;
 	private $user;
 	private $pass;
