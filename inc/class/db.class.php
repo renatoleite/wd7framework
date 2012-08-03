@@ -1,12 +1,12 @@
 <?
 
 interface DB{
-	function conectar();
-	function desconecta();
-	function setDB();
-	function statusconexao();
-	function set($prop,$value);
-	function erro($erro);
+	public function doConecta();
+	public function doDesconecta();
+	public function setDB();
+	public function getStatusConexao();
+	public function set($prop,$value);
+	public function setErro($erro);
 }
 
 abstract class DBWD7 implements DB{
@@ -16,12 +16,12 @@ abstract class DBWD7 implements DB{
 	private $pass;
 	private $data;
    
-	public function conectar(){            
+	public function doConecta(){            
 		$con = mysql_connect($this->host,$this->user,$this->pass) or die($this->erro(mysql_error()));
 		return $con;
 	}
    
-	public function statusconexao(){
+	public function getStatusConexao(){
 		return ($this->conectar()==true)?'Conectado':'Erro de Conexão';
 	}
    
@@ -34,14 +34,14 @@ abstract class DBWD7 implements DB{
 		$this->$prop = $value;
 	}
    
-	public function erro($erro){      	   		
+	public function setErro($erro){      	   		
 		$arqerro = fopen("../log-".$this->host.".log", "a");
 		$escreve = fwrite($arqerro,"[".date("d/m/y H:i")."] - ".$erro."\r\n");
 		fclose($arqerro);	   	  	  
 		echo $erro;
 	}
 	
-	public function desconecta(){
+	public function doDesconecta(){
 		return @mysql_close($this->conectar());
 	}  	
 }
