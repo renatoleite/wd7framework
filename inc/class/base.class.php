@@ -62,11 +62,13 @@ class Base extends Operacoes{
 	
 	public function doInsert(){
 		$qry = mysql_query('INSERT INTO '.$this->tabela.' ('.$this->fields.') VALUES ('.$this->values.')');
+		$this->doClearParametros();
 		return ($qry) ? true : false;
 	}
 
 	public function doDelete(){
 		$qry = mysql_query('DELETE FROM '.$this->tabela.$this->getWhere());
+		$this->doClearParametros();
 		return ($qry) ? true : false;			
 	}
 	
@@ -80,6 +82,7 @@ class Base extends Operacoes{
 		}
 				
 		$qry = mysql_query('UPDATE '.$this->tabela.' SET '.$lsResult.$this->getWhere);
+		$this->doClearParametros();
 		return ($qry) ? true : false;
 	}
     	
@@ -120,6 +123,16 @@ class Base extends Operacoes{
 		$escreve = fwrite($arqerro,"[".date("d/m/y H:i")."] - ".$log."\r\n");
 		fclose($arqerro);	   	  	  		
 	}			
+    
+    public function doLoadParametros($lsField,$lsValor){	
+		if(!isset($lsField)){$this->$fields = (isset($this->$fields)?'':$this->$fields.',').$lsField;}
+		if(!isset($lsValor)){$this->$values = (isset($this->$values)?'':$this->$values.',').$lsValor;}
+	}
+	
+	private function doClearParametros(){
+		$this->$fields = '';
+		$this->$values = '';
+	}
     	
 }
 

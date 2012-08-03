@@ -4,8 +4,10 @@
 	
 	$RoBase = new Base();
 	
-	$RoBase->set('tabela',"patrocinador");
-	$RoBase->set('fields',"id,nome,link");
+	$RoBase->set('tabela',"patrocinador");	
+	$RoBase->doLoadParametros("id","");
+	$RoBase->doLoadParametros("nome","");
+	$RoBase->doLoadParametros("link","");	
 	$RoBase->set('where',"1=1");				
 	$rs = $RoBase->doSelect();	
 				
