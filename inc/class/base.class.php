@@ -2,7 +2,14 @@
 
 require(dirname(__FILE__).'/db.class.php');
 
-class Base extends DBWD7{
+abstract class Operacoes extends DBWD7{
+	public function doInsert(){}
+	public function doDelete(){}
+	public function doUpdate(){}
+	public function doSelect(){}
+}
+
+class Base extends Operacoes{
 
 	private $tabela;
 	private $where;
@@ -18,52 +25,17 @@ class Base extends DBWD7{
 		parent::set('user',$user);
 		parent::set('pass',$pass);
 		parent::set('data',$data);		
-		parent::conectar();
+		parent::doConecta();
 		parent::setDB();			
 	}
-	
-	public function query(){
-		$qry = mysql_query('SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy().$this->getLimit()) or die (parent::erro(mysql_error()));
-		return $qry;	
-	}
 
-	public function txtquery(){
-		return 'SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy().$this->getLimit();
-	}
-
-	public function numrows(){		
-		$qry = mysql_query('SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy()) or die (parent::erro(mysql_error()));
-		$rows = mysql_num_rows($qry);
-		return $rows;	
-	}
-
-	public function last($lsField){
-		$qry = mysql_query('SELECT '.$lsField.' FROM '.$this->tabela.' ORDER BY '.$lsField.' DESC LIMIT 1') or die (parent::erro(mysql_error()));					
-		while($result = mysql_fetch_array($qry)){
-			return $result[$lsField];
-			break;
-		}		
-	}
-
-	public function GetPK(){
-		$qry = mysql_query('SHOW KEYS FROM '.$this->tabela.' WHERE Key_name = \'PRIMARY\'') or die (parent::erro(mysql_error()));					
-		while($result = mysql_fetch_array($qry)){
-			return $result['Column_name'];
-			break;
-		}		
-	}
-	
-	public function insert(){
+	public function doInsert(){
 		$qry = mysql_query('INSERT INTO '.$this->tabela.' ('.$this->fields.') VALUES ('.$this->values.')');
+		$this->doClearParametros();
 		return ($qry) ? true : false;
 	}
-
-	public function delete(){
-		$qry = mysql_query('DELETE FROM '.$this->tabela.$this->getWhere());
-		return ($qry) ? true : false;			
-	}
 	
-	public function update(){		
+	public function doUpdate(){		
 		$lsFields = $this->GeraArray(',',$this->fields);
 		$lsValues = $this->GeraArray(',',$this->values);							
 		
@@ -73,9 +45,47 @@ class Base extends DBWD7{
 		}
 				
 		$qry = mysql_query('UPDATE '.$this->tabela.' SET '.$lsResult.$this->getWhere);
+		$this->doClearParametros();
 		return ($qry) ? true : false;
+	}	
+
+	public function doDelete(){
+		$qry = mysql_query('DELETE FROM '.$this->tabela.$this->getWhere());
+		$this->doClearParametros();
+		return ($qry) ? true : false;			
+	}    	
+	
+	public function doSelect(){
+		$qry = mysql_query('SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy().$this->getLimit()) or die (parent::setErro(mysql_error()));
+		return $qry;	
 	}
-    	
+
+	public function getQuery(){
+		return 'SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy().$this->getLimit();
+	}
+
+	public function numrows(){		
+		$qry = mysql_query('SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy()) or die (parent::setErro(mysql_error()));
+		$rows = mysql_num_rows($qry);
+		return $rows;	
+	}
+
+	public function Last($lsField){
+		$qry = mysql_query('SELECT '.$lsField.' FROM '.$this->tabela.' ORDER BY '.$lsField.' DESC LIMIT 1') or die (parent::setErro(mysql_error()));					
+		while($result = mysql_fetch_array($qry)){
+			return $result[$lsField];
+			break;
+		}		
+	}
+
+	public function GetPK(){
+		$qry = mysql_query('SHOW KEYS FROM '.$this->tabela.' WHERE Key_name = \'PRIMARY\'') or die (parent::setErro(mysql_error()));					
+		while($result = mysql_fetch_array($qry)){
+			return $result['Column_name'];
+			break;
+		}		
+	}
+
 	public function set($prop,$value){
 		$this->$prop = $value;
 	}
@@ -108,11 +118,21 @@ class Base extends DBWD7{
 		return explode($separador,$str);
 	}
 	
-	public function log($log){      	   		
+	public function setLog($log){      	   		
 		$arqerro = fopen("./logint.log", "a");
 		$escreve = fwrite($arqerro,"[".date("d/m/y H:i")."] - ".$log."\r\n");
 		fclose($arqerro);	   	  	  		
 	}			
+    
+    public function doLoadParametros($lsField,$lsValor=''){	
+		if(!isset($lsField)){$this->$fields = (isset($this->$fields)?'':$this->$fields.',').$lsField;}
+		if(!isset($lsValor)){$this->$values = (isset($this->$values)?'':$this->$values.',').$lsValor;}
+	}
+	
+	private function doClearParametros(){
+		$this->$fields = '';
+		$this->$values = '';
+	}
     	
 }
 

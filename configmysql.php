@@ -1,7 +1,7 @@
 <?
 	//CONFIGURAÇÃO MYSQL
-	$host	= '127.0.0.1';
-	$user	= 'root';
-	$pass	= '';
-	$data	= 'novaera';	
+	$host	= 'mysql.agenciawd7.com.br';
+	$user	= 'agenciawd703';
+	$pass	= '741963';
+	$data	= 'agenciawd703';	
 ?>
