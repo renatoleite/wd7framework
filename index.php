@@ -1,10 +1,11 @@
 <?	
+	//FRAMEWORK PARA DESENVOLVIMENTO WD7
+	
 	require('./inc/class/base.class.php');
 	require('./inc/class/util.class.php');
 	
 	$RoBase = new Base();
-	
-	//SELECT
+		
 	$RoBase->set('tabela','patrocinador');	
 	$RoBase->doLoadParametros('id');
 	$RoBase->doLoadParametros('nome');
@@ -16,5 +17,4 @@
 		echo $result['link']."<br>";
 		
 	}	
-	//
 ?>
