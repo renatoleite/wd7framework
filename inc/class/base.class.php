@@ -28,6 +28,32 @@ class Base extends Operacoes{
 		parent::doConecta();
 		parent::setDB();			
 	}
+
+	public function doInsert(){
+		$qry = mysql_query('INSERT INTO '.$this->tabela.' ('.$this->fields.') VALUES ('.$this->values.')');
+		$this->doClearParametros();
+		return ($qry) ? true : false;
+	}
+	
+	public function doUpdate(){		
+		$lsFields = $this->GeraArray(',',$this->fields);
+		$lsValues = $this->GeraArray(',',$this->values);							
+		
+		for ($i = 1; $i <=count($lsFields); $i++){
+			$lsVirgula = ($i >= 2) ? ',' : ''; 
+			$lsResult  = $lsVirgula.$lsFields[$i].'='.$lsValues[$i];
+		}
+				
+		$qry = mysql_query('UPDATE '.$this->tabela.' SET '.$lsResult.$this->getWhere);
+		$this->doClearParametros();
+		return ($qry) ? true : false;
+	}	
+
+	public function doDelete(){
+		$qry = mysql_query('DELETE FROM '.$this->tabela.$this->getWhere());
+		$this->doClearParametros();
+		return ($qry) ? true : false;			
+	}    	
 	
 	public function doSelect(){
 		$qry = mysql_query('SELECT '.$this->getFields().' FROM '.$this->tabela.$this->getWhere().$this->getOrder().$this->getGroupBy().$this->getLimit()) or die (parent::setErro(mysql_error()));
@@ -59,33 +85,7 @@ class Base extends Operacoes{
 			break;
 		}		
 	}
-	
-	public function doInsert(){
-		$qry = mysql_query('INSERT INTO '.$this->tabela.' ('.$this->fields.') VALUES ('.$this->values.')');
-		$this->doClearParametros();
-		return ($qry) ? true : false;
-	}
 
-	public function doDelete(){
-		$qry = mysql_query('DELETE FROM '.$this->tabela.$this->getWhere());
-		$this->doClearParametros();
-		return ($qry) ? true : false;			
-	}
-	
-	public function doUpdate(){		
-		$lsFields = $this->GeraArray(',',$this->fields);
-		$lsValues = $this->GeraArray(',',$this->values);							
-		
-		for ($i = 1; $i <=count($lsFields); $i++){
-			$lsVirgula = ($i >= 2) ? ',' : ''; 
-			$lsResult  = $lsVirgula.$lsFields[$i].'='.$lsValues[$i];
-		}
-				
-		$qry = mysql_query('UPDATE '.$this->tabela.' SET '.$lsResult.$this->getWhere);
-		$this->doClearParametros();
-		return ($qry) ? true : false;
-	}
-    	
 	public function set($prop,$value){
 		$this->$prop = $value;
 	}
@@ -124,7 +124,7 @@ class Base extends Operacoes{
 		fclose($arqerro);	   	  	  		
 	}			
     
-    public function doLoadParametros($lsField,$lsValor){	
+    public function doLoadParametros($lsField,$lsValor=''){	
 		if(!isset($lsField)){$this->$fields = (isset($this->$fields)?'':$this->$fields.',').$lsField;}
 		if(!isset($lsValor)){$this->$values = (isset($this->$values)?'':$this->$values.',').$lsValor;}
 	}
