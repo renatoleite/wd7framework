@@ -21,6 +21,18 @@ class Utils{
 		return $sql;
 	}
 
+	public function zerando($valor,$tam){
+		$tamanho = strlen($valor);
+		$qntzero = ($tam-$tamanho);
+		$resul	 = '';
+		$i		 = 1;
+		while($i <= $qntzero){
+			$resul	= $resul.'0';
+			$i++;
+		}
+		return $resul.$valor;
+	}
+
 	public function mestoext($data){		
 		$mexextenso = ($data == 1) 	? 'Janeiro' 	: $mexextenso;
 		$mexextenso = ($data == 2) 	? 'Fevereiro' 	: $mexextenso;
