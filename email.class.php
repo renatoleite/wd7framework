@@ -32,11 +32,11 @@ class WD7Email{
      */
     private static function ValidateEmailData(){
         /** Valida se os campos foram preenchidos */
-        if(!isset(self::$name)){ return False; }
-        if(!isset(self::$email)){ return False; }
-        if(!isset(self::$subject)){ return False; }
-        if(!isset(self::$comments)){ return False; }
-        if(!isset(self::$to)){ return False; }
+        if(!isset(self::$name)){ return false; }
+        if(!isset(self::$email)){ return false; }
+        if(!isset(self::$subject)){ return false; }
+        if(!isset(self::$comments)){ return false; }
+        if(!isset(self::$to)){ return false; }
         /** Caso todos os campos tenham sido preenchidos */
         return True;
     }
@@ -48,11 +48,11 @@ class WD7Email{
     public static function Send(){
         /** Valida se todos os dador foram preenchidos */
         if(self::ValidateEmailData()){
-            $lsEmail = 'From: ' . self::$email . "\r\n" .
+            $lsEmail = 'From: ' . self::$to . "\r\n" .
                          'Reply-To:'. self::$email . "\r\n" ;
 			 $lsMsg = (isset(self::$header)? self::$header . '\n\n' : '') . "Nome: " . self::$name. "\n" .
                                   (isset(self::$phone) ? "Telefone: " . self::$phone . "\n" : '') . "Mensagem: " . self::$comments . "\n";
-            if(mail(self::$to, self::$subject, $lsMsg, $lsEmail)){
+            if(mail(self::$email, self::$subject, $lsMsg, $lsEmail)){
                     return True;
             }else{
                     return False;

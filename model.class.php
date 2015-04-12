@@ -288,11 +288,11 @@ class WD7Model {
      * @param string $lsValor O valor a ser passado
      * @param type $lsTipo O tipo do field, por exemplo: string, integer...
      */
-    public static function LoadParameter($lsField, $lsValor = 'lockNull', $lsTipo = null) {
+    public static function LoadParameter($lsField, $lsValor = null, $lsTipo = null) {
         if (isset($lsField)) {
             self::$fields = (isset(self::$fields) ? self::$fields . ',' : '') . $lsField;
         }
-        if (($lsValor != 'lockNull') || ($lsValor == 0)) {
+        if (($lsValor != 'lockNull') || ($lsValor == 0) || (is_bool($lsValor))) {
             self::$values = (isset(self::$values) ? self::$values . ',' : '') . (isset($lsTipo) ? self::ValidateValues($lsValor, $lsTipo) : $lsValor);
         }
     }
@@ -316,8 +316,8 @@ class WD7Model {
      */
     private static function ValidateValues($lsValue, $lsTipo) {
         /* Valido para caso tiver passando um valor null */
-        if ((!isset($lsValue)) || /* Remover essa parte futuramente */($lsValue == '')){
-            if($lsTipo != boolean){
+        if (!isset($lsValue)){
+            if(!is_bool($lsValue)){
                 return (string) 'null';
             }
         }
@@ -353,7 +353,7 @@ class WD7Model {
      * @return MySQL_Query Retorno do MySQL
      */
     public static function SelectSQL($lsSelect) {
-        $qry = mysql_query($lsSelect) or die(parent::setErro(mysql_error()));
+        $qry = mysql_query($lsSelect) or die(WD7Error::SetError(mysql_error()));
         return $qry;
     }
 }

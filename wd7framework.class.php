@@ -10,7 +10,7 @@ require(dirname(__FILE__) . '/inc/class/transaction.class.php');
 require(dirname(__FILE__) . '/inc/class/regsession.class.php');
 require(dirname(__FILE__) . '/inc/class/encrypt.class.php');
 
-/**Classe que estancia todas as outras, para não precisar extender (Object Model)*/
+/**Classe que instância todas as outras, para não precisar herdar (Object Model)*/
 class WD7Framework {
     public function Object($class) {
         return $Object = Object::getInstance($class);
@@ -40,21 +40,21 @@ class Object{
         return ($tipo == 'consulta' ? (isset(self::$InstanceCollection[$nameclass]) ? true : false ) : self::$InstanceCollection[$nameclass] ) ;
     }
 
-    /**Verifica se o objeto ja foi instanciado, se sim, retorna o objeto, se não, o estancia*/
+    /**Verifica se o objeto ja foi instanciado, se sim, retorna o objeto, se não, o instância*/
     public static function getInstance($class) {
         if (!isset(self::$instance)){
             /**Se não existe nenhum objeto instanciado, cria ele*/
-            self::$instance = new $class;                        
+            self::$instance = new $class;
         }elseif((isset(self::$instance)) && ((self::$instance instanceof $class)==false)){
             /**Se existe um objeto instanciado e ele for diferente da classe passada, guarda o atual e cria um novo*/
             if(self::GetObj($class, 'consulta') == false){
                 self::AddItem(get_class(self::$instance), self::$instance);
                 self::$instance = new $class;
-            }else{                
+            }else{
                 /**Verifica se a instancia atual ja tinha sido guardado, caso não, guarda ela*/
-                if(self::GetObj(get_class(self::$instance), 'consulta') == false){                
-                    self::AddItem(get_class(self::$instance), self::$instance);                    
-                }                
+                if(self::GetObj(get_class(self::$instance), 'consulta') == false){
+                    self::AddItem(get_class(self::$instance), self::$instance);
+                }
                 self::$instance = self::GetObj($class);
             }
         }else{

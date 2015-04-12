@@ -123,6 +123,15 @@ class WD7Utils {
     }
 
     /**
+     * Formata a data para o tipo esperado do SQL.
+     * @param type $date
+     * @return type
+     */
+    public static function FormatDateToSql($date){
+        return date("Y-m-d", strtotime(str_replace('/','-',$date)));
+    }
+
+    /**
      * Envia os dados do upload
      * @param string $file O Arquivo
      * @param string $path O nome da imagem
