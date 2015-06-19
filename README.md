@@ -1,1 +1,1 @@
-PHP Framework for web projects in PHP.
+PHP Framework to web projects in PHP.
